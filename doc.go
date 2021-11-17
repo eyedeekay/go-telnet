@@ -10,7 +10,7 @@ Example TELNET Server
 ListenAndServe starts a (un-secure) TELNET server with a given address and handler.
 
 	handler := telnet.EchoHandler
-	
+
 	err := telnet.ListenAndServe(":23", handler)
 	if nil != err {
 		panic(err)
@@ -23,7 +23,7 @@ ListenAndServeTLS starts a (secure) TELNETS server with a given address and hand
 using the specified "cert.pem" and "key.pem" files.
 
 	handler := telnet.EchoHandler
-	
+
 	err := telnet.ListenAndServeTLS(":992", "cert.pem", "key.pem", handler)
 	if nil != err {
 		panic(err)
@@ -35,11 +35,11 @@ Example TELNET Client:
 DialToAndCall creates a (un-secure) TELNET client, which connects to a given address using the specified caller.
 
 	package main
-	
+
 	import (
 		"github.com/reiver/go-telnet"
 	)
-	
+
 	func main() {
 		var caller telnet.Caller = telnet.StandardCaller
 
@@ -53,19 +53,19 @@ Example TELNETS Client:
 DialToAndCallTLS creates a (secure) TELNETS client, which connects to a given address using the specified caller.
 
 	package main
-	
+
 	import (
 		"github.com/reiver/go-telnet"
 
 		"crypto/tls"
 	)
-	
+
 	func main() {
 		//@TODO: Configure the TLS connection here, if you need to.
 		tlsConfig := &tls.Config{}
 
 		var caller telnet.Caller = telnet.StandardCaller
-		
+
 		//@TOOD: replace "example.net:992" with address you want to connect to.
 		telnet.DialToAndCallTLS("example.net:992", caller, tlsConfig)
 	}
@@ -104,27 +104,27 @@ For example:
 
 
 	package main
-	
-	
+
+
 	import (
 		"github.com/reiver/go-oi"
 		"github.com/reiver/go-telnet"
 		"github.com/reiver/go-telnet/telsh"
-		
+
 		"time"
 	)
-	
-	
+
+
 	func main() {
-		
+
 		shellHandler := telsh.NewShellHandler()
-		
+
 		commandName := "date"
 		shellHandler.Register(commandName, danceProducer)
-		
+
 		commandName = "animate"
 		shellHandler.Register(commandName, animateProducer)
-		
+
 		addr := ":23"
 		if err := telnet.ListenAndServe(addr, shellHandler); nil != err {
 			panic(err)
@@ -140,20 +140,20 @@ The actual implemenation for the `date` command could be done like the following
 	func dateHandlerFunc(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
 		const layout = "Mon Jan 2 15:04:05 -0700 MST 2006"
 		s := time.Now().Format(layout)
-		
+
 		if _, err := oi.LongWriteString(stdout, s); nil != err {
 			return err
 		}
-		
+
 		return nil
 	}
-	
-	
+
+
 	func dateProducerFunc(ctx telnet.Context, name string, args ...string) telsh.Handler{
 		return telsh.PromoteHandlerFunc(dateHandler)
 	}
-	
-	
+
+
 	var dateProducer = ProducerFunc(dateProducerFunc)
 
 Note that your "real" work is in the `dateHandlerFunc` func.
@@ -161,49 +161,49 @@ Note that your "real" work is in the `dateHandlerFunc` func.
 And the actual implementation for the `animate` command could be done as follows:
 
 	func animateHandlerFunc(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
-		
+
 		for i:=0; i<20; i++ {
 			oi.LongWriteString(stdout, "\r⠋")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠙")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠹")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠸")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠼")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠴")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠦")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠧")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠇")
 			time.Sleep(50*time.Millisecond)
-			
+
 			oi.LongWriteString(stdout, "\r⠏")
 			time.Sleep(50*time.Millisecond)
 		}
 		oi.LongWriteString(stdout, "\r \r\n")
-		
+
 		return nil
 	}
-	
-	
+
+
 	func animateProducerFunc(ctx telnet.Context, name string, args ...string) telsh.Handler{
 		return telsh.PromoteHandlerFunc(animateHandler)
 	}
-	
-	
+
+
 	var animateProducer = ProducerFunc(animateProducerFunc)
 
 Again, note that your "real" work is in the `animateHandlerFunc` func.
@@ -253,16 +253,16 @@ Example TELNET Client
 You can make a simple (un-secure) TELNET client with code like the following:
 
 	package main
-	
-	
+
+
 	import (
 		"github.com/reiver/go-telnet"
 	)
-	
-	
+
+
 	func main() {
 		var caller telnet.Caller = telnet.StandardCaller
-		
+
 		//@TOOD: replace "example.net:5555" with address you want to connect to.
 		telnet.DialToAndCall("example.net:5555", caller)
 	}
@@ -273,16 +273,16 @@ Example TELNETS Client
 You can make a simple (secure) TELNETS client with code like the following:
 
 	package main
-	
-	
+
+
 	import (
 		"github.com/reiver/go-telnet"
 	)
-	
-	
+
+
 	func main() {
 		var caller telnet.Caller = telnet.StandardCaller
-		
+
 		//@TOOD: replace "example.net:5555" with address you want to connect to.
 		telnet.DialToAndCallTLS("example.net:5555", caller)
 	}
@@ -433,11 +433,11 @@ To show this in a more complete example, our `dateHandlerFunc` from before could
 	func dateHandlerFunc(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
 		const layout = "Mon Jan 2 15:04:05 -0700 MST 2006"
 		s := "\x1b[44;37;1m" + time.Now().Format(layout) + "\x1b[0m"
-		
+
 		if _, err := oi.LongWriteString(stdout, s); nil != err {
 			return err
 		}
-		
+
 		return nil
 	}
 
