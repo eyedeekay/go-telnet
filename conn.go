@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	sam "github.com/eyedeekay/sam3/helper"
+	"github.com/eyedeekay/goSam"
 )
 
 type Conn struct {
@@ -40,11 +40,11 @@ func DialToI2P(addr string) (*Conn, error) {
 		return nil, fmt.Errorf("addr cannot be empty")
 	}
 
-	ss, err := sam.I2PStreamSession("telnet", "127.0.0.1:7656", "telnet")
+	sam, err := goSam.NewDefaultClient()
 	if nil != err {
 		return nil, err
 	}
-	conn, err := ss.Dial(network, addr)
+	conn, err := sam.Dial(network, addr)
 	if nil != err {
 		return nil, err
 	}
