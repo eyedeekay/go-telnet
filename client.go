@@ -26,6 +26,28 @@ func DialToAndCall(srvAddr string, caller Caller) error {
 	return client.Call(conn)
 }
 
+func DialI2PAndCall(caller Caller) error {
+	conn, err := DialI2P()
+	if nil != err {
+		return err
+	}
+
+	client := &Client{Caller: caller}
+
+	return client.Call(conn)
+}
+
+func DialToI2PAndCall(srvAddr string, caller Caller) error {
+	conn, err := DialToI2P(srvAddr)
+	if nil != err {
+		return err
+	}
+
+	client := &Client{Caller: caller}
+
+	return client.Call(conn)
+}
+
 func DialAndCallTLS(caller Caller, tlsConfig *tls.Config) error {
 	conn, err := DialTLS(tlsConfig)
 	if nil != err {
