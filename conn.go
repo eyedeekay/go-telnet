@@ -40,7 +40,15 @@ func DialToI2P(addr string) (*Conn, error) {
 		return nil, fmt.Errorf("addr cannot be empty")
 	}
 
-	sam, err := goSam.NewDefaultClient()
+	sam, err := goSam.NewClientFromOptions(
+		goSam.SetInLength(1),
+		goSam.SetOutLength(1),
+		goSam.SetDebug(true),
+		goSam.SetInQuantity(3),
+		goSam.SetOutQuantity(3),
+		goSam.SetInBackups(1),
+		goSam.SetOutBackups(1),
+	)
 	if nil != err {
 		return nil, err
 	}
